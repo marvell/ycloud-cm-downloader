@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -17,7 +18,8 @@ var (
 	keyIdFlag            string
 	privateKeyPathFlag   string
 
-	certIdFlag string
+	certIdFlag  string
+	certDirFlag string
 )
 
 func init() {
@@ -28,6 +30,7 @@ func init() {
 	flag.StringVar(&privateKeyPathFlag, "privkey", "./private.pem", "private key file path (https://cloud.yandex.ru/docs/iam/operations/authorized-key/create)")
 
 	flag.StringVar(&certIdFlag, "cert-id", "", "certificate id")
+	flag.StringVar(&certDirFlag, "cert-dir", "./", "certificate directory")
 }
 
 func main() {
@@ -64,8 +67,8 @@ func main() {
 		return
 	}
 
-	fullchainFilePath := fmt.Sprintf("./%s_fullchain.pem", certIdFlag)
-	err = ioutil.WriteFile(fullchainFilePath, []byte(strings.Join(cert.CertificateChain, "")), 0600)
+	fullchainFilePath := path.Join(certDirFlag, fmt.Sprintf("%s_fullchain.pem", certIdFlag))
+	err = ioutil.WriteFile(fullchainFilePath, []byte(strings.Join(cert.CertificateChain, "")), 0400)
 	if err != nil {
 		fmt.Printf("ERR write fullchain: %s\n", err)
 		os.Exit(1)
@@ -73,8 +76,8 @@ func main() {
 	}
 	fmt.Printf("full chain file was created in %s\n", fullchainFilePath)
 
-	privkeyFilePath := fmt.Sprintf("./%s_privkey.pem", certIdFlag)
-	err = ioutil.WriteFile(privkeyFilePath, []byte(cert.PrivateKey), 0600)
+	privkeyFilePath := path.Join(certDirFlag, fmt.Sprintf("%s_privkey.pem", certIdFlag))
+	err = ioutil.WriteFile(privkeyFilePath, []byte(cert.PrivateKey), 0400)
 	if err != nil {
 		fmt.Printf("ERR write fullchain: %s\n", err)
 		os.Exit(1)
