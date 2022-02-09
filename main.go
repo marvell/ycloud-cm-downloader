@@ -39,9 +39,7 @@ func main() {
 		os.Exit(1)
 		return
 	}
-	if debugModeFlag {
-		fmt.Printf("DBG private key loaded")
-	}
+	dbg("private key loaded")
 
 	jwToken, err := genJwt(serviceAccountIdFlag, keyIdFlag, privateKey)
 	if err != nil {
@@ -49,9 +47,7 @@ func main() {
 		os.Exit(1)
 		return
 	}
-	if debugModeFlag {
-		fmt.Printf("DBG jwt generated: %s", jwToken)
-	}
+	dbg("jwt generated: %s", jwToken)
 
 	iamToken, err := genIam(jwToken)
 	if err != nil {
@@ -59,9 +55,7 @@ func main() {
 		os.Exit(1)
 		return
 	}
-	if debugModeFlag {
-		fmt.Printf("DBG iam token generated: %s", iamToken)
-	}
+	dbg("iam token generated: %s", iamToken)
 
 	cert, err := getCertificate(iamToken, certIdFlag)
 	if err != nil {
@@ -117,4 +111,10 @@ func getCertificate(token, certificateId string) (*Certificate, error) {
 	}
 
 	return &v, nil
+}
+
+func dbg(format string, a ...interface{}) {
+	if debugModeFlag {
+		fmt.Printf("DBG "+format+"\n", a...)
+	}
 }

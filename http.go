@@ -20,10 +20,10 @@ func httpDo(req *http.Request) ([]byte, error) {
 	if res.StatusCode != http.StatusOK {
 		if debugModeFlag {
 			reqDump, _ := httputil.DumpRequestOut(req, true)
-			fmt.Printf("DBG request dump:\n%s\n", reqDump)
+			dbg("request dump:\n%s", reqDump)
 
 			resDump, _ := httputil.DumpResponse(res, true)
-			fmt.Printf("DBG response dump:\n%s\n", resDump)
+			dbg("response dump:\n%s", resDump)
 		}
 
 		return nil, fmt.Errorf("invalid response status code: %d", res.StatusCode)
