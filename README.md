@@ -10,3 +10,21 @@ $ ycloud-cm-downloader -cert-id <cert-id> -sa-id <sa-id> -key-id <key-id> -privk
 full chain file was created in ./<cert-id>_fullchain.pem
 private key file was created in ./<cert-id>_privkey.pem
 ```
+
+```bash
+$ ycloud-cm-downloader-darwin-arm64 -h
+
+Usage of ./ycloud-cm-downloader-darwin-arm64:
+  -cert-dir string
+    	certificate directory (default "./")
+  -cert-id string
+    	certificate id
+  -debug
+    	debug mode
+  -key-id string
+    	key ID
+  -privkey string
+    	private key file path (https://cloud.yandex.ru/docs/iam/operations/authorized-key/create) (default "./private.pem")
+  -sa-id string
+    	service account ID
+```
