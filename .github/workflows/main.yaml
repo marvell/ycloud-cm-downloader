@@ -6,24 +6,14 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
-      - run: env
-      - run: pwd
-      # - uses: actions/setup-go@v1
-      #   with:
-      #     go-version: ${{ matrix.go-version }}
-      # - uses: actions/checkout@v1
-      # - name: Cache go dependencies
-      #   id: unit-cache-go-dependencies
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: ~/go/pkg/mod
-      #     key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
-      #     restore-keys: ${{ runner.os }}-go-${{ matrix.go-version }}-
-      # - name: Install go dependencies
-      #   if: steps.unit-cache-go-dependencies.outputs.cache-hit != 'true'
-      #   run: go get ./...
-      # - name: Test
-      #   run: go test ./...
+      - uses: actions/setup-go@v1
+        with:
+          go-version: 1.18
+      - uses: actions/checkout@v1
+      - name: Install go dependencies
+        run: go get ./...
+      - name: Test
+        run: go test ./...
 
   # build-artifacts:
   #   runs-on: ubuntu-latest
