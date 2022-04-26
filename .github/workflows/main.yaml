@@ -4,6 +4,7 @@ on:
 #   DOCKER_CLI_VERSION: "19.03.1"
 jobs:
   unit-test:
+    runs-on: ubuntu-latest
     steps:
       - run: env
       - run: pwd
