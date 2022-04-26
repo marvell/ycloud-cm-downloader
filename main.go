@@ -5,8 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
-	"os"
 	"path"
 	"strings"
 )
@@ -38,52 +38,46 @@ func main() {
 
 	privateKey, err := loadPrivateKey(privateKeyPathFlag)
 	if err != nil {
-		fmt.Printf("ERR load private key: %s\n", err)
-		os.Exit(1)
+		log.Fatalf("ERR load private key: %s", err)
 		return
 	}
 	dbg("private key loaded")
 
 	jwToken, err := genJwt(serviceAccountIdFlag, keyIdFlag, privateKey)
 	if err != nil {
-		fmt.Printf("ERR generate JWT: %s\n", err)
-		os.Exit(1)
+		log.Fatalf("ERR generate JWT: %s", err)
 		return
 	}
 	dbg("jwt generated: %s", jwToken)
 
 	iamToken, err := genIam(jwToken)
 	if err != nil {
-		fmt.Printf("ERR generate IAM: %s\n", err)
-		os.Exit(1)
+		log.Fatalf("ERR generate IAM: %s", err)
 		return
 	}
 	dbg("iam token generated: %s", iamToken)
 
 	cert, err := getCertificate(iamToken, certIdFlag)
 	if err != nil {
-		fmt.Printf("ERR generate IAM: %s\n", err)
-		os.Exit(1)
+		log.Fatalf("ERR generate IAM: %s", err)
 		return
 	}
 
 	fullchainFilePath := path.Join(certDirFlag, fmt.Sprintf("%s_fullchain.pem", certIdFlag))
 	err = ioutil.WriteFile(fullchainFilePath, []byte(strings.Join(cert.CertificateChain, "")), 0400)
 	if err != nil {
-		fmt.Printf("ERR write fullchain: %s\n", err)
-		os.Exit(1)
+		log.Fatalf("ERR write fullchain: %s", err)
 		return
 	}
-	fmt.Printf("full chain file was created in %s\n", fullchainFilePath)
+	log.Printf("full chain file was created in %s", fullchainFilePath)
 
 	privkeyFilePath := path.Join(certDirFlag, fmt.Sprintf("%s_privkey.pem", certIdFlag))
 	err = ioutil.WriteFile(privkeyFilePath, []byte(cert.PrivateKey), 0400)
 	if err != nil {
-		fmt.Printf("ERR write fullchain: %s\n", err)
-		os.Exit(1)
+		log.Fatalf("ERR write fullchain: %s", err)
 		return
 	}
-	fmt.Printf("private key file was created in %s\n", privkeyFilePath)
+	log.Printf("private key file was created in %s", privkeyFilePath)
 }
 
 type Certificate struct {
@@ -118,6 +112,6 @@ func getCertificate(token, certificateId string) (*Certificate, error) {
 
 func dbg(format string, a ...interface{}) {
 	if debugModeFlag {
-		fmt.Printf("DBG "+format+"\n", a...)
+		log.Printf("DBG "+format, a...)
 	}
 }
